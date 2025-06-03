@@ -24,7 +24,15 @@ pd.set_option('display.max_rows', None)
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco importa as bibliotecas necessárias para processar os dados, como leitura de arquivos, manipulação de tabelas e gráficos.
+Este bloco importa bibliotecas do Python que são essenciais para o funcionamento do código:
+
+- `pandas`: para ler, organizar e analisar tabelas (planilhas).
+- `xml.etree.ElementTree`: para ler arquivos no formato XML (um tipo de arquivo de texto estruturado).
+- `numpy`: para fazer cálculos matemáticos de forma mais eficiente.
+- `os`, `glob`: para navegar pelas pastas e encontrar arquivos automaticamente.
+- `matplotlib.pyplot`: para criar gráficos.
+
+Essas bibliotecas funcionam como ferramentas que ajudam o código a fazer tarefas específicas com poucos comandos.
 
 
 ---
@@ -77,7 +85,13 @@ def process_xml(xml_path, xml_file_name):
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco define uma função que lê arquivos XML com informações de contratos e transforma os dados em uma tabela.
+Aqui estamos criando uma **função chamada `process_xml`** que serve para:
+
+- **Ler um arquivo XML** com dados de clientes e contratos.
+- **Extrair os dados importantes** desses contratos (ex: valor, data, atraso).
+- **Transformar os dados** em uma **tabela (`DataFrame`)**, que é um formato fácil de analisar.
+
+Isso é útil porque os arquivos XML são difíceis de ler manualmente, e esta função transforma esses dados em algo parecido com uma planilha do Excel.
 
 
 ---
@@ -114,7 +128,13 @@ def process_xml_gar(xml_path, xml_file_name):
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco define uma função que lê arquivos XML com informações de contratos e transforma os dados em uma tabela.
+Aqui estamos criando uma **função chamada `process_xml`** que serve para:
+
+- **Ler um arquivo XML** com dados de clientes e contratos.
+- **Extrair os dados importantes** desses contratos (ex: valor, data, atraso).
+- **Transformar os dados** em uma **tabela (`DataFrame`)**, que é um formato fácil de analisar.
+
+Isso é útil porque os arquivos XML são difíceis de ler manualmente, e esta função transforma esses dados em algo parecido com uma planilha do Excel.
 
 
 ---
@@ -148,7 +168,12 @@ print('Final DataFrame Shape:', df_lv2.shape)
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco localiza todos os arquivos XML da pasta escolhida e os prepara para leitura.
+Este bloco procura todos os **arquivos XML** dentro de uma **pasta específica no computador**.
+Esses arquivos são os dados brutos que o programa precisa ler.
+
+Depois, ele passa cada um para a função que transforma XML em tabela.
+
+Resultado: uma grande tabela com todos os dados combinados, pronta para análises.
 
 
 ---
@@ -165,7 +190,8 @@ df_lv2.head()
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -199,7 +225,12 @@ print('Final DataFrame Shape:', df_cod_gar.shape)
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco localiza todos os arquivos XML da pasta escolhida e os prepara para leitura.
+Este bloco procura todos os **arquivos XML** dentro de uma **pasta específica no computador**.
+Esses arquivos são os dados brutos que o programa precisa ler.
+
+Depois, ele passa cada um para a função que transforma XML em tabela.
+
+Resultado: uma grande tabela com todos os dados combinados, pronta para análises.
 
 
 ---
@@ -228,7 +259,8 @@ df_apoio_gar.columns = columns
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -253,7 +285,12 @@ df_3040.head()
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco combina duas tabelas: uma com dados dos contratos e outra com informações das garantias vinculadas aos contratos.
+Neste bloco, o código **combina duas tabelas diferentes**:
+- A primeira contém os dados dos contratos.
+- A segunda contém as garantias desses contratos.
+
+A junção é feita usando informações em comum (como código do cliente, número do contrato, etc.).
+O objetivo é ter tudo em uma única tabela para facilitar os cálculos e análises futuras.
 
 
 ---
@@ -270,7 +307,8 @@ Este bloco combina duas tabelas: uma com dados dos contratos e outra com informa
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -287,7 +325,10 @@ df_3040.query('DiaAtraso == "2460310"')
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco filtra a tabela para encontrar registros específicos, como contratos com determinado código ou atraso.
+Este bloco **filtra a tabela** para mostrar somente os registros que atendem a uma condição específica.
+Exemplo: contratos com atraso acima de um valor ou de um cliente específico.
+
+É útil para análises mais pontuais ou para entender melhor determinados casos.
 
 
 ---
@@ -304,7 +345,8 @@ df_3040.describe()
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -321,7 +363,8 @@ df_3040.info()
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -344,7 +387,11 @@ df_3040['CongEcon'] = df_3040['CongEcon'].astype('float64')
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -364,7 +411,8 @@ df_3040['AnoMesReferencia'] = df_3040['AnoMesReferencia'].dt.strftime('%Y-%m-%d'
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -381,7 +429,10 @@ df_3040.query('Contrt == "487100CHESPJ0000259292213"')
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco filtra a tabela para encontrar registros específicos, como contratos com determinado código ou atraso.
+Este bloco **filtra a tabela** para mostrar somente os registros que atendem a uma condição específica.
+Exemplo: contratos com atraso acima de um valor ou de um cliente específico.
+
+É útil para análises mais pontuais ou para entender melhor determinados casos.
 
 
 ---
@@ -398,7 +449,8 @@ df_test = df_3040
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -453,7 +505,11 @@ df_test[v_cols] = df_test[v_cols].fillna(0)
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -470,7 +526,11 @@ df_test['chave'] = df_test['Cd'].astype(str) + "_" + df_test['Contrt'].astype(st
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -487,7 +547,8 @@ df_test.chave.nunique() == df_test.shape[0]
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -509,7 +570,8 @@ else:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco imprime uma mensagem informando que a execução terminou com sucesso.
+Esse comando apenas **informa que o código terminou de executar com sucesso**.
+É útil para confirmar que tudo ocorreu como esperado.
 
 
 ---
@@ -526,7 +588,10 @@ df_test.query('chave == "05597773_0003000247_2019-01-01_0215_901.0"')
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco filtra a tabela para encontrar registros específicos, como contratos com determinado código ou atraso.
+Este bloco **filtra a tabela** para mostrar somente os registros que atendem a uma condição específica.
+Exemplo: contratos com atraso acima de um valor ou de um cliente específico.
+
+É útil para análises mais pontuais ou para entender melhor determinados casos.
 
 
 ---
@@ -565,7 +630,11 @@ df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -582,7 +651,8 @@ df_test.Cat.value_counts()
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -600,7 +670,8 @@ df_test.sort_values(by=['Cat'], ascending=[True], inplace=True)
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -617,7 +688,8 @@ df_test.tail()
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -634,7 +706,8 @@ Este bloco realiza etapas intermediárias de cálculo, transformação ou limpez
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -698,7 +771,8 @@ aggregations = {
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -715,7 +789,12 @@ df_test = df_test.groupby(['Cd', 'Contrt', 'AnoMesReferencia', 'Mod']).agg(aggre
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco agrupa os dados por cliente e contrato, para fazer cálculos como soma de valores ou maior atraso.
+Aqui os dados são **agrupados por cliente ou por contrato**, e para cada grupo o código faz cálculos como:
+- Soma de valores de contratos
+- Máximo de atraso
+- Quantidade de garantias, entre outros.
+
+É como fazer um **resumo por cliente**, muito útil para relatórios ou dashboards.
 
 
 ---
@@ -732,7 +811,11 @@ df_test['chave'] = df_test['Cd'].astype(str) + "_" + df_test['Contrt'].astype(st
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -754,7 +837,8 @@ else:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco imprime uma mensagem informando que a execução terminou com sucesso.
+Esse comando apenas **informa que o código terminou de executar com sucesso**.
+É útil para confirmar que tudo ocorreu como esperado.
 
 
 ---
@@ -771,7 +855,8 @@ df_test.describe()
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -794,7 +879,11 @@ df_test[v_cols] = df_test[v_cols].fillna(0)
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -813,7 +902,8 @@ view_list = [
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -861,7 +951,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -905,7 +999,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -929,7 +1027,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -950,7 +1052,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -967,7 +1073,8 @@ df_test.head()
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -988,7 +1095,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1020,7 +1131,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1041,7 +1156,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1073,7 +1192,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1103,7 +1226,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1130,7 +1257,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1151,7 +1282,15 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este bloco importa bibliotecas do Python que são essenciais para o funcionamento do código:
+
+- `pandas`: para ler, organizar e analisar tabelas (planilhas).
+- `xml.etree.ElementTree`: para ler arquivos no formato XML (um tipo de arquivo de texto estruturado).
+- `numpy`: para fazer cálculos matemáticos de forma mais eficiente.
+- `os`, `glob`: para navegar pelas pastas e encontrar arquivos automaticamente.
+- `matplotlib.pyplot`: para criar gráficos.
+
+Essas bibliotecas funcionam como ferramentas que ajudam o código a fazer tarefas específicas com poucos comandos.
 
 
 ---
@@ -1174,7 +1313,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1197,7 +1340,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1218,7 +1365,8 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -1239,7 +1387,8 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -1286,7 +1435,8 @@ view['DtVencOp_v2'] = view['DtVencOp_v2'].replace(pd.to_datetime('1970-01-01'), 
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -1318,7 +1468,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1339,7 +1493,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1361,7 +1519,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1382,7 +1544,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1401,7 +1567,8 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -1422,7 +1589,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1444,7 +1615,15 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este bloco importa bibliotecas do Python que são essenciais para o funcionamento do código:
+
+- `pandas`: para ler, organizar e analisar tabelas (planilhas).
+- `xml.etree.ElementTree`: para ler arquivos no formato XML (um tipo de arquivo de texto estruturado).
+- `numpy`: para fazer cálculos matemáticos de forma mais eficiente.
+- `os`, `glob`: para navegar pelas pastas e encontrar arquivos automaticamente.
+- `matplotlib.pyplot`: para criar gráficos.
+
+Essas bibliotecas funcionam como ferramentas que ajudam o código a fazer tarefas específicas com poucos comandos.
 
 
 ---
@@ -1465,7 +1644,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1490,7 +1673,8 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -1511,7 +1695,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1532,7 +1720,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1553,7 +1745,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1589,7 +1785,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1611,7 +1811,11 @@ for view in view_list:
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1628,7 +1832,8 @@ df_test.info()
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -1645,7 +1850,8 @@ df_test.IU.value_counts()
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -1662,7 +1868,8 @@ Este bloco realiza etapas intermediárias de cálculo, transformação ou limpez
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -1683,7 +1890,11 @@ df_test.to_parquet(f'{output_folder}\\novo_novo_01-base_contrato_variaveis.parqu
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco salva a tabela final em um arquivo, que pode ser usado em outros sistemas ou relatórios (como Excel ou Power BI).
+Esse comando **salva a tabela final** que o código montou em um **arquivo de saída**, nos formatos `.parquet` ou `.csv`.
+- `.csv` pode ser aberto em Excel.
+- `.parquet` é usado por sistemas mais avançados como Power BI e Python.
+
+Assim você pode usar os dados tratados fora do Python.
 
 
 ---
@@ -1700,7 +1911,8 @@ df_test.sample(10)
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -1717,7 +1929,8 @@ df_test.describe()
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -1734,7 +1947,10 @@ df_test.query('cliente_tempo_relac_anos < 0')
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco filtra a tabela para encontrar registros específicos, como contratos com determinado código ou atraso.
+Este bloco **filtra a tabela** para mostrar somente os registros que atendem a uma condição específica.
+Exemplo: contratos com atraso acima de um valor ou de um cliente específico.
+
+É útil para análises mais pontuais ou para entender melhor determinados casos.
 
 
 ---
@@ -1773,7 +1989,11 @@ df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1791,7 +2011,8 @@ df_test.sort_values(by=['Cat'], ascending=[True], inplace=True)
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -1880,7 +2101,8 @@ aggregations = {
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -1898,7 +2120,12 @@ df_cliente = df_test.groupby(['Cd', 'AnoMesReferencia']).agg(aggregations).reset
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco agrupa os dados por cliente e contrato, para fazer cálculos como soma de valores ou maior atraso.
+Aqui os dados são **agrupados por cliente ou por contrato**, e para cada grupo o código faz cálculos como:
+- Soma de valores de contratos
+- Máximo de atraso
+- Quantidade de garantias, entre outros.
+
+É como fazer um **resumo por cliente**, muito útil para relatórios ou dashboards.
 
 
 ---
@@ -1915,7 +2142,8 @@ df_cliente.head()
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -1935,7 +2163,11 @@ df_cliente['saldo_utilizado/limite'] = (
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1955,7 +2187,11 @@ df_cliente['saldo_atraso_total/saldo_total'] = (
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -1978,7 +2214,8 @@ df_cliente['percentual_contrato_pago'] = np.where(
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -1998,7 +2235,11 @@ df_cliente['percentual_prazo_remanescente'] = df_cliente['percentual_prazo_reman
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+Este trecho **limpa e padroniza os dados** da tabela:
+- Converte textos em números ou datas, para que possam ser somados ou comparados corretamente.
+- Substitui espaços vazios (valores ausentes) por zeros ou valores padrão.
+
+Esses passos são muito importantes para evitar erros nos cálculos posteriores.
 
 
 ---
@@ -2015,7 +2256,8 @@ df_cliente.columns
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -2036,7 +2278,11 @@ df_cliente.to_parquet(f'{output_folder}\\novo_novo_01-base_cliente_variaveis.par
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco salva a tabela final em um arquivo, que pode ser usado em outros sistemas ou relatórios (como Excel ou Power BI).
+Esse comando **salva a tabela final** que o código montou em um **arquivo de saída**, nos formatos `.parquet` ou `.csv`.
+- `.csv` pode ser aberto em Excel.
+- `.parquet` é usado por sistemas mais avançados como Power BI e Python.
+
+Assim você pode usar os dados tratados fora do Python.
 
 
 ---
@@ -2053,7 +2299,8 @@ df_cliente.IU.value_counts()
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -2070,7 +2317,8 @@ df_cliente.info()
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -2087,7 +2335,8 @@ Este bloco realiza etapas intermediárias de cálculo, transformação ou limpez
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
 
 
 ---
@@ -2104,4 +2353,5 @@ Este bloco realiza etapas intermediárias de cálculo, transformação ou limpez
 ```
 
 ## 📘 O que este bloco faz:
-Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+Esse trecho realiza alguma transformação ou cálculo intermediário, como criação de colunas com indicadores (ex: saldo, tempo de contrato, flag de atraso etc).
+Esses passos ajudam a montar os dados que serão usados no relatório final.
