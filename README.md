@@ -1,10 +1,9 @@
-# 🧠 Bloco 1 – Importações e Configurações Iniciais
 
-Este bloco prepara o ambiente para rodar o restante do código. Ele importa ferramentas (bibliotecas) que vamos usar e faz alguns ajustes na visualização dos dados.
+# 📦 Bloco 1
 
----
-
-### 📦 O que o código faz:
+```bash
+# Bloco 1 - Código
+```
 
 ```python
 import pandas as pd
@@ -18,803 +17,2091 @@ from os import chdir, getcwd, listdir
 import glob
 import datetime
 import re
-```
-
-#### 📚 Explicação das bibliotecas:
-| Biblioteca | Para que serve |
-|------------|----------------|
-| `pandas` | Manipular tabelas de dados (como planilhas Excel) |
-| `xml.etree.ElementTree` | Ler e navegar por arquivos XML |
-| `numpy` | Cálculos matemáticos com arrays e números |
-| `csv` | Trabalhar com arquivos .csv (valores separados por vírgula) |
-| `matplotlib.pyplot` | Criar gráficos e visualizações |
-| `os` e `glob` | Trabalhar com arquivos e pastas do computador |
-| `datetime` | Trabalhar com datas e horas |
-| `re` | Trabalhar com expressões regulares (buscas de texto avançadas) |
-
----
-
-### ⚙️ Configurações do pandas:
-
-```python
 pd.set_option('display.max_columns', None)
+
 pd.options.display.float_format = '{:.2f}'.format
 pd.set_option('display.max_rows', None)
 ```
 
-- `max_columns`: mostra todas as colunas de uma tabela, sem esconder nenhuma.
-- `float_format`: exibe os números com 2 casas decimais.
-- `max_rows`: mostra todas as linhas quando printar o DataFrame (sem cortes).
+## 📘 O que este bloco faz:
+Este bloco importa as bibliotecas necessárias para processar os dados, como leitura de arquivos, manipulação de tabelas e gráficos.
+
 
 ---
 
-### ✅ Pré-requisitos para rodar este bloco:
 
-Execute este comando no terminal para instalar tudo:
+# 📦 Bloco 2
 
 ```bash
-pip install pandas numpy matplotlib
+# Bloco 2 - Código
 ```
 
----
+```python
+def process_xml(xml_path, xml_file_name):
+    xmlparse = ET.parse(xml_path)
+    root = xmlparse.getroot()
+    cols = ["File_Name", "Cd", 'Tp', "ClassCli", "IniRelactCli", 'CongEcon',
+            "Mod", 'Cosif', 'CaracEspecial', 'DiaAtraso', 'Contrt', "ClassOp", 'ProvConsttd', 'DtVencOp', 'DtContr', 'VlrContr', 
+            "Venc"]
+    rows = []
+    for cd in root.findall("./Cli"):
+        x = cd.get("Cd")
+        xa = cd.get("Tp")
+        cl = cd.get("ClassCli")
+        ini = cd.get("IniRelactCli")
+        cg = cd.get("CongEcon")
+        for mod in cd.findall("./Op"):
+            y = mod.get('Mod') #ok
+            bb = mod.get('Cosif')
+            b = mod.get('CaracEspecial') #ok
+            i = mod.get('DiaAtraso')
+            v = mod.get('VlrContr')
+            c = mod.get('Contrt') #ok
+            op = mod.get('ClassOp') #ok
+            prov = mod.get('ProvConsttd') #ok
+            dv = mod.get('DtVencOp')
+            dc = mod.get('DtContr')
+            for venc in mod.findall("./Venc"):
+                z = venc.attrib
 
-📌 Após rodar este bloco, o ambiente estará pronto para começar a processar os arquivos XML da estrutura 3040.
+                rows.append({'File_Name': xml_file_name, 'Cd': x, 'IniRelactCli': ini, 'ClassCli': cl, 'CongEcon': cg, 'Tp': xa, "Mod": y, 'Cosif': bb, 'CaracEspecial': b,
+                             'DiaAtraso': i, 'VlrContr': v, 'Contrt': c, 'ClassOp': op, 'ProvConsttd': prov, 'DtVencOp': dv, 'DtContr': dc,
+                             'Venc': z})
 
+    df = pd.DataFrame(rows, columns=cols)
 
+    objs = [df, pd.DataFrame(df['Venc'].tolist())]
+    df_lv2 = pd.concat(objs, axis=1).drop('Venc', axis=1)
 
-# 📦 Bloco 2 – Função `process_xml`: Lê contratos e vencimentos
+    return df_lv2
+```
 
-Esta função abre um arquivo XML da estrutura 3040 e extrai os contratos e vencimentos registrados.
-
-### ✨ O que ela faz:
-- Percorre os nós `<Cli>` (cliente) e `<Op>` (operação de crédito).
-- Coleta informações como:
-  - Código do cliente
-  - Modalidade da operação
-  - Valor do contrato
-  - Data de vencimento
-  - Número do contrato
-  - COSIF, Índices, Tipo de garantia etc.
-- Também coleta dados das parcelas (`<Venc>`), como:
-  - Valor de cada parcela
-  - Atraso e data de vencimento
-
-### 🔑 Resultado:
-Retorna um DataFrame com **todos os contratos e seus vencimentos** para o cliente.
-
-### ✅ Pré-requisitos:
-O arquivo XML deve estar no formato esperado da Estrutura 3040 do Bacen.
-
-
----
-
-
-# 📦 Bloco 3 – Função `process_xml_gar`: Lê garantias
-
-Essa função complementa a leitura do XML extraindo informações de **garantias** dos contratos.
-
-### ✨ O que ela faz:
-- Percorre os nós `<Gar>` dentro de `<Cli>`.
-- Extrai dados como:
-  - Código da garantia
-  - Tipo de vínculo
-  - Valor da garantia
-  - Tipo tratado (C1, C2, C3)
-- Cada garantia pode ser associada a um ou mais contratos.
-
-### 🔑 Resultado:
-Retorna um DataFrame com as **garantias vinculadas aos contratos**.
-
-### 🧩 Observação:
-A junção dos dados de garantia com os contratos é feita em blocos seguintes com base em chaves únicas.
+## 📘 O que este bloco faz:
+Este bloco define uma função que lê arquivos XML com informações de contratos e transforma os dados em uma tabela.
 
 
 ---
 
 
-# 📁 Bloco 4 – Definição de caminhos das pastas
+# 📦 Bloco 3
 
-```python
-xml_directory = "xmls/"
-output_folder = "resultados/"
+```bash
+# Bloco 3 - Código
 ```
 
-- `xml_directory`: pasta onde os arquivos XML estão salvos.
-- `output_folder`: pasta onde os arquivos `.parquet` processados serão salvos.
+```python
+def process_xml_gar(xml_path, xml_file_name):
+    xmlparse = ET.parse(xml_path)
+    root = xmlparse.getroot()
+    cols = ["File_Name","Cd",'Tp',"Mod",'IPOC','Contrt',"Gar"] 
+    rows = [] 
+    for cd in root.findall("./Cli"):
+        x = cd.get("Cd")
+        xa = cd.get("Tp")
+        for mod in cd.findall("./Op"):
+            y=mod.get('Mod')
+            bb =mod.get('IPOC')
+            c=mod.get('Contrt')
+            for venc in mod.findall("./Gar"):
+                z= venc.attrib
 
-🛠️ Se as pastas não existirem, é necessário criá-las antes de rodar o script.
+                rows.append({'File_Name': xml_file_name,'Cd':x,'Tp':xa,"Mod": y,'IPOC':bb,'Contrt':c,'Gar':z})
+
+    df_gar = pd.DataFrame(rows, columns=cols)
+    df_cod_gar = df_gar
+
+    return df_cod_gar
+```
+
+## 📘 O que este bloco faz:
+Este bloco define uma função que lê arquivos XML com informações de contratos e transforma os dados em uma tabela.
 
 
 ---
 
 
-# 📄 Bloco 5 – Lista todos os arquivos XML
+# 📦 Bloco 4
 
-```python
-arquivos_xml = glob.glob(os.path.join(xml_directory, "*.xml"))
+```bash
+# Bloco 4 - Código
 ```
 
-🔍 O que faz:
-- Procura todos os arquivos com extensão `.xml` dentro da pasta `xmls/`.
-- Cria uma lista com os caminhos completos desses arquivos para leitura posterior.
-
-✅ Requisito: a pasta `xmls/` deve conter os arquivos XML que seguem o layout 3040.
-
-
-# 📥 Bloco 6 – Inicializa listas para armazenamento
-
 ```python
-lista_df_contratos = []
-lista_df_gar = []
+# Directory containing XML files
+xml_directory = r"C:\Users\fabiano.souza\Documents\codigosBIP\base352\3040\0001"
+
+# List all XML files in the directory
+xml_files = [os.path.join(xml_directory, file) for file in os.listdir(xml_directory) if file.endswith(".xml")]
+
+# Process each XML file and concatenate the results
+all_dfs = []
+for xml_file in xml_files:
+    xml_file_name = os.path.basename(xml_file)  # Extract the file name without the path
+    df_result = process_xml(xml_file, xml_file_name)
+    all_dfs.append(df_result)
+
+# Concatenate all dataframes into a single dataframe
+df_lv2 = pd.concat(all_dfs, ignore_index=True)
+
+# Display the resulting dataframe
+print('Final DataFrame Shape:', df_lv2.shape)
 ```
 
-✅ O que faz:
-Cria duas listas vazias para guardar:
-- `lista_df_contratos`: todos os DataFrames de contratos lidos.
-- `lista_df_gar`: todos os DataFrames de garantias lidos.
-
-Essas listas vão ser preenchidas ao processar cada arquivo XML.
+## 📘 O que este bloco faz:
+Este bloco localiza todos os arquivos XML da pasta escolhida e os prepara para leitura.
 
 
 ---
 
 
-# 🔁 Bloco 7 – Leitura de todos os XMLs na pasta
+# 📦 Bloco 5
 
-Percorre todos os arquivos XML encontrados e executa a leitura com as funções definidas antes:
-
-```python
-for arq in arquivos_xml:
-    df = process_xml(xml_directory, os.path.basename(arq))
-    lista_df_contratos.append(df)
-    df_gar = process_xml_gar(xml_directory, os.path.basename(arq))
-    lista_df_gar.append(df_gar)
+```bash
+# Bloco 5 - Código
 ```
 
-✅ Resultado:
-- Lê e extrai contratos e garantias de cada arquivo.
-- Armazena tudo nas listas `lista_df_contratos` e `lista_df_gar`.
+```python
+df_lv2.head()
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
 
 
 ---
 
 
-# 🧩 Bloco 8 – Unifica garantias de todos os arquivos
+# 📦 Bloco 6
 
-```python
-df_gar_all = pd.concat(lista_df_gar)
+```bash
+# Bloco 6 - Código
 ```
 
-📌 O que faz:
-- Junta todos os DataFrames de garantias em um único DataFrame chamado `df_gar_all`.
+```python
+# Directory containing XML files
+xml_directory = r'C:\Users\fabiano.souza\Documents\codigosBIP\base352\3040\0001'
+
+# List all XML files in the directory
+xml_files = [os.path.join(xml_directory, file) for file in os.listdir(xml_directory) if file.endswith(".xml")]
+
+# Process each XML file and concatenate the results
+all_dfs = []
+for xml_file in xml_files:
+    xml_file_name = os.path.basename(xml_file)  # Extract the file name without the path
+    df_result = process_xml_gar(xml_file, xml_file_name)
+    all_dfs.append(df_result)
+
+# Concatenate all dataframes into a single dataframe
+df_cod_gar = pd.concat(all_dfs, ignore_index=True)
+
+# Display the resulting dataframe
+print('Final DataFrame Shape:', df_cod_gar.shape)
+```
+
+## 📘 O que este bloco faz:
+Este bloco localiza todos os arquivos XML da pasta escolhida e os prepara para leitura.
 
 
 ---
 
 
-# 🧩 Bloco 9 – Unifica contratos de todos os arquivos
+# 📦 Bloco 7
 
-```python
-df_3040 = pd.concat(lista_df_contratos)
+```bash
+# Bloco 7 - Código
 ```
 
-📌 O que faz:
-- Junta todos os DataFrames de contratos (com vencimentos) em um único DataFrame `df_3040`.
+```python
+# Ajustando a coluna de Tp
+objs = [df_cod_gar, pd.DataFrame(df_cod_gar['Gar'].tolist())]
+df_gar2  = pd.concat(objs, axis=1).drop('Gar', axis=1)
+df_apoio_gar = df_gar2.copy()
+# Create a list of column names
+columns = list(df_apoio_gar.columns)
+# # Find the index of the second occurrence of 'Tp'
+tp_indices = [i for i, col in enumerate(columns) if col == 'Tp']
+second_tp_index = tp_indices[1]  # Get the second occurrence
+# Rename the second 'Tp' to a new name, e.g., 'Tp2'
+columns[second_tp_index] = 'Tp_gar_trat'
+# # Assign the modified list back to the DataFrame
+df_apoio_gar.columns = columns
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
 
 
 ---
 
 
-# 📅 Bloco 10 – Adiciona coluna com ano e mês
+# 📦 Bloco 8
 
-```python
-df_3040["AnoMesReferencia"] = pd.to_datetime(df_3040["DtBase"]).dt.strftime("%Y-%m")
+```bash
+# Bloco 8 - Código
 ```
 
-📌 O que faz:
-- Converte a coluna `DtBase` (data base do arquivo XML) em formato `ano-mês` (ex: `2025-04`).
-- Cria uma nova coluna chamada `AnoMesReferencia`.
-
-Essa coluna será útil para agrupamentos mensais posteriormente.
-
-
-# 🔢 Bloco 11 – Converte colunas numéricas
-
 ```python
-colunas_float = ['PercIndx', 'VarCamb', 'TaxEft', 'TaxNom', 'TaxEfetiva', 'TaxaJuros', 'VlrContr']
-for col in colunas_float:
-    df_3040[col] = pd.to_numeric(df_3040[col], errors='coerce')
+df_3040 = pd.merge(df_lv2,df_apoio_gar,on=['Cd','Tp','Mod','Contrt','File_Name'], how='left').fillna(0)
+colunas_venc = ['v40', 'v110', 'v120', 'v130', 'v20', 'v140', 'v150', 'v160', 'v165', 'v170', 'v175', 'v180', 'v205', 'v220', 'v230', 'v240', 'v245', 'v250', 'v255', 'v260', 'v270', 'v280', 'v330', 'v320', 'v210', 'v199', 'v310', 'v190', 'v290', 'v60', 'v80']
+
+for coluna in colunas_venc:
+    if coluna not in df_3040.columns:
+        df_3040[coluna] = 0  # Adiciona a coluna ausente e preenche com zeros
+    df_3040[coluna] = df_3040[coluna].astype(float)
+    
+df_3040.head()
 ```
 
-📌 O que faz:
-- Converte colunas que devem ser numéricas (porcentagens, taxas e valores) para o tipo `float`.
-- Usa `errors='coerce'` para transformar valores inválidos em `NaN` (vazios).
-
-🎯 Por quê?
-Garante que operações matemáticas posteriores (como somar, calcular média) funcionem corretamente.
+## 📘 O que este bloco faz:
+Este bloco combina duas tabelas: uma com dados dos contratos e outra com informações das garantias vinculadas aos contratos.
 
 
 ---
 
 
-# 📅 Bloco 12 – Converte colunas de data
+# 📦 Bloco 9
 
-```python
-colunas_data = ['DtContr', 'DtVencOp', 'DtUltPgto']
-for col in colunas_data:
-    df_3040[col] = pd.to_datetime(df_3040[col], errors='coerce')
+```bash
+# Bloco 9 - Código
 ```
 
-📌 O que faz:
-- Converte strings de datas para o tipo `datetime` do pandas.
-- Isso permite calcular prazos, atrasos, meses etc.
-
-🛠️ Importante para usar funções como:
 ```python
-(df_3040['DtVencOp'] - df_3040['DtContr']).dt.days
+
 ```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
 
 
 ---
 
 
-# 🧼 Bloco 13 – Limpeza de tipo e conversões
+# 📦 Bloco 10
 
-```python
-df_3040['Cd'] = df_3040['Cd'].astype(str)
-df_3040['Contrt'] = df_3040['Contrt'].astype(str)
-df_3040['Mod'] = df_3040['Mod'].astype(str)
-df_3040['CEP'] = df_3040['CEP'].astype(str)
-df_3040['VlrContr'] = df_3040['VlrContr'].astype(float)
+```bash
+# Bloco 10 - Código
 ```
 
-📌 O que faz:
-- Garante que colunas como `Cd`, `Contrt`, `Mod`, `CEP` sejam **strings**, mesmo que pareçam números.
-- Coluna `VlrContr` é convertida para float para permitir cálculos futuros.
+```python
+df_3040.query('DiaAtraso == "2460310"')
+```
 
-🎯 Por quê?
-Evita bugs em agrupamentos e junções onde zeros à esquerda são importantes (como CEPs e códigos).
+## 📘 O que este bloco faz:
+Este bloco filtra a tabela para encontrar registros específicos, como contratos com determinado código ou atraso.
 
 
 ---
 
 
-# 🔐 Bloco 14 – Cria chave única do contrato
+# 📦 Bloco 11
 
-```python
-df_3040["chave_contrato"] = df_3040["Cd"] + df_3040["Contrt"] + df_3040["Mod"] + df_3040["AnoMesReferencia"]
+```bash
+# Bloco 11 - Código
 ```
 
-📌 O que faz:
-- Junta 4 colunas para formar uma chave única para cada contrato no mês:
-  - Código do cliente
-  - Número do contrato
-  - Modalidade
-  - Mês de referência
+```python
+df_3040.describe()
+```
 
-🔑 Isso será usado para agregar e combinar informações de forma única por contrato.
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
 
 
 ---
 
 
-# 🧩 Bloco 15 – Expande garantias por contrato
+# 📦 Bloco 12
 
-```python
-df_gar_all = df_gar_all.groupby("chave_contrato").agg({
-    "Tp_gar_trat": lambda x: list(x),
-    "Val": lambda x: list(x),
-    "Vinc": lambda x: list(x),
-    "Cod": lambda x: list(x),
-}).reset_index()
+```bash
+# Bloco 12 - Código
 ```
 
-📌 O que faz:
-- Agrupa as garantias pelo contrato (`chave_contrato`).
-- Junta os valores em **listas** para cada contrato.
-
-🔁 Por exemplo:
-Um contrato com 3 garantias terá uma linha com:
 ```python
-Tp_gar_trat = ["C1", "C3", "outro"]
-Val = [10000, 5000, 2000]
+df_3040.info()
 ```
 
-Isso facilita a análise agregada por contrato.
-
-
-# 🔗 Bloco 16 – Une garantias aos contratos
-
-```python
-df_3040 = df_3040.merge(df_gar_all, on="chave_contrato", how="left")
-```
-
-📌 O que faz:
-- Junta os dados das garantias (`df_gar_all`) à base de contratos (`df_3040`) usando a chave única `chave_contrato`.
-
-🧩 Cada linha de contrato agora inclui as garantias em forma de lista.
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
 
 
 ---
 
 
-# 🚩 Bloco 17 – Cria flags para tipos de garantia
+# 📦 Bloco 13
 
-```python
-for tipo in ['C1', 'C2', 'C3']:
-    df_3040[f'flag_{tipo}'] = df_3040["Tp_gar_trat"].apply(lambda x: 1 if isinstance(x, list) and tipo in x else 0)
+```bash
+# Bloco 13 - Código
 ```
 
-📌 O que faz:
-- Para cada tipo de garantia (C1, C2, C3), cria uma nova coluna (`flag_C1`, `flag_C2`, `flag_C3`).
-- Se o contrato tiver esse tipo de garantia na lista `Tp_gar_trat`, marca com 1, senão 0.
+```python
+# df_3040['CaracEspecial'] = df_3040['CaracEspecial'].astype('float64')
+df_3040['Tp_gar_trat'] = df_3040['Tp_gar_trat'].astype('float64')
+df_3040['Ident'] = df_3040['Ident'].astype('float64')
+df_3040['PercGar'] = df_3040['PercGar'].astype('float64')
+df_3040['VlrOrig'] = df_3040['VlrOrig'].astype('float64')
+df_3040['VlrContr'] = df_3040['VlrContr'].astype('float64')
+df_3040['CongEcon'] = df_3040['CongEcon'].astype('float64')
+```
 
-🎯 Isso ajuda a classificar e filtrar contratos por tipo de garantia.
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
 
 
 ---
 
 
-# 🏷️ Bloco 18 – Define categoria de garantia
+# 📦 Bloco 14
 
-```python
-def classificar_garantia(row):
-    if row['flag_C1'] == 1:
-        return 'C1'
-    elif row['flag_C2'] == 1:
-        return 'C2'
-    elif row['flag_C3'] == 1:
-        return 'C3'
-    else:
-        return 'SEM GARANTIA'
-
-df_3040['cat_garantia'] = df_3040.apply(classificar_garantia, axis=1)
+```bash
+# Bloco 14 - Código
 ```
 
-📌 O que faz:
-- Cria uma nova coluna `cat_garantia` com a classificação principal da garantia.
-- Prioridade: C1 > C2 > C3 > SEM GARANTIA.
+```python
+# Criando coluna de referencia
+df_3040['AnoMesReferencia'] = df_3040['File_Name'].str.extract(r'_(\d{6})\D')
+df_3040['AnoMesReferencia'] = pd.to_datetime(df_3040['AnoMesReferencia'], format='%m%Y')
+df_3040['AnoMesReferencia'] = df_3040['AnoMesReferencia'].dt.strftime('%Y-%m-%d')
+```
 
-🔍 Essa coluna resume as garantias em uma única categoria por contrato.
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
 
 
 ---
 
 
-# 🔁 Bloco 19 – Flag de produto rotativo
+# 📦 Bloco 15
 
-```python
-lista_rotativos = ['0281', '0284', '0285', '0287']
-df_3040["flag_prod_rotativos"] = df_3040["Mod"].isin(lista_rotativos).astype(int)
+```bash
+# Bloco 15 - Código
 ```
 
-📌 O que faz:
-- Cria uma flag binária (1 ou 0) se a modalidade do contrato está na lista de produtos rotativos (como cartão de crédito).
+```python
+df_3040.query('Contrt == "487100CHESPJ0000259292213"')
+```
 
-🧠 Produtos rotativos geralmente têm regras de risco diferentes, por isso são identificados separadamente.
+## 📘 O que este bloco faz:
+Este bloco filtra a tabela para encontrar registros específicos, como contratos com determinado código ou atraso.
 
 
 ---
 
 
-# ⏱️ Bloco 20 – Flag de atraso > 90 dias
+# 📦 Bloco 17
 
-```python
-df_3040["flag_atraso_maior90"] = (df_3040["Atraso"] > 90).astype(int)
+```bash
+# Bloco 17 - Código
 ```
 
-📌 O que faz:
-- Cria uma flag indicando se o contrato tem parcelas com mais de 90 dias de atraso.
-
-🛠️ Essa informação é importante para calcular perda esperada (PE), inadimplência e classificação de risco.
-
-
-# 💰 Bloco 21 – Calcula saldo utilizado
-
 ```python
-df_3040["saldo_utilizado"] = df_3040["VlrContr"] - df_3040["ValorAmort"]
+df_test = df_3040
 ```
 
-📌 O que faz:
-- Cria a coluna `saldo_utilizado` subtraindo o valor amortizado (`ValorAmort`) do valor original do contrato (`VlrContr`).
-
-🎯 Isso mostra quanto do contrato ainda está sendo usado.
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
 
 
 ---
 
 
-# ⏳ Bloco 22 – Calcula prazo total do contrato
+# 📦 Bloco 18
 
-```python
-df_3040["prazo_contrato"] = (df_3040["DtVencOp"] - df_3040["DtContr"]).dt.days
+```bash
+# Bloco 18 - Código
 ```
 
-📌 O que faz:
-- Calcula o número total de dias entre a data de início (`DtContr`) e a data final do contrato (`DtVencOp`).
+```python
+# converte a coluna de 'DtBase' para o tipo datetime
+df_test['AnoMesReferencia'] = pd.to_datetime(df_test['AnoMesReferencia']) 
 
-🧠 Útil para calcular porcentagem de contrato já vencido e monitorar ciclos de crédito.
+# converte a coluna de 'Tp' para o tipo inteiro
+df_test['Tp'] = df_test['Tp'].astype('int64')
+
+# converte a coluna de 'DiaAtraso' para o tipo inteiro
+df_test['DiaAtraso'] = df_test['DiaAtraso'].replace("nan", None)
+df_test['DiaAtraso'] = df_test['DiaAtraso'].fillna(0)
+df_test['DiaAtraso'] = df_test['DiaAtraso'].str.replace("'", "")
+df_test['DiaAtraso'] = df_test['DiaAtraso'].fillna(0)
+df_test['DiaAtraso'] = df_test['DiaAtraso'].astype('float64')
+df_test['DiaAtraso'] = df_test['DiaAtraso'].astype('int64')
+
+# converte a coluna de 'IniRelactCli' para o tipo datetime
+df_test['IniRelactCli'] = pd.to_datetime(df_test['IniRelactCli'])
+
+# converte a coluna de 'Mod' para o tipo inteiro
+df_test['Mod'] = df_test['Mod'].astype('str')
+# df_test['Mod'] = df_test['Mod'].apply(lambda x: x.strip('0') if isinstance(x, str) else x)
+
+# converte a coluna de 'DtContr' para o tipo datetime
+df_test['DtContr'] = pd.to_datetime(df_test['DtContr']) 
+
+# converte a coluna de 'VlrContr' para o tipo float
+df_test['VlrContr'] = df_test['VlrContr'].astype('float64')
+
+# converte a coluna de 'DtVencOp' para o tipo datetime
+df_test['DtVencOp'] = pd.to_datetime(df_test['DtVencOp'])
+
+# converte as colunas 'vCOD' para o tipo float
+v_cols = [c for c in df_test.columns if 
+          (c.startswith('v1') or c.startswith('v2') or c.startswith('v3') 
+           or c.startswith('v4') or c.startswith('v5') or c.startswith('v6') 
+           or c.startswith('v7') or c.startswith('v8') or c.startswith('v9')
+           or c.startswith('v0'))]
+
+df_test[v_cols] = df_test[v_cols].astype('float64')
+df_test[v_cols] = df_test[v_cols].fillna(0)
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
 
 
 ---
 
 
-# 🗓️ Bloco 23 – Calcula prazo remanescente
+# 📦 Bloco 19
 
-```python
-df_3040["prazo_remanescente"] = (df_3040["DtVencOp"] - pd.to_datetime(df_3040["DtBase"])).dt.days
+```bash
+# Bloco 19 - Código
 ```
 
-📌 O que faz:
-- Calcula quantos dias ainda faltam para o contrato vencer a partir da **data base** do arquivo XML (`DtBase`).
+```python
+df_test['chave'] = df_test['Cd'].astype(str) + "_" + df_test['Contrt'].astype(str) + "_" + df_test['AnoMesReferencia'].astype(str) + "_" + df_test['Mod'].astype(str) + "_" + df_test['Tp_gar_trat'].astype(str)
+```
 
-🧩 Importante para entender a posição atual do contrato no tempo.
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
 
 
 ---
 
 
-# 📈 Bloco 24 – Calcula índice de utilização (IU)
+# 📦 Bloco 20
 
-```python
-df_3040["IU"] = df_3040["saldo_utilizado"] / df_3040["VlrContr"]
+```bash
+# Bloco 20 - Código
 ```
 
-📌 O que faz:
-- Calcula o quanto do contrato está sendo utilizado atualmente (saldo/valor original).
+```python
+df_test.chave.nunique() == df_test.shape[0]
+```
 
-🔢 Resultado varia de 0 a 1 (ou seja, 0% a 100%).
-
-🧠 Indicador importante em análise de risco e comportamento do cliente.
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
 
 
 ---
 
 
-# ⚠️ Bloco 25 – Flag para contratos com valor em prejuízo
+# 📦 Bloco 21
 
-```python
-df_3040["flag_prejuizo"] = (df_3040["ValorPrej"] > 0).astype(int)
+```bash
+# Bloco 21 - Código
 ```
 
-📌 O que faz:
-- Cria uma coluna binária (`flag_prejuizo`) que vale 1 se o contrato tiver valor em prejuízo (`ValorPrej > 0`), senão 0.
-
-🧩 Útil para análise de contratos já deteriorados.
-
-
-# ⛔ Bloco 26 – Flag de atraso anormal (> 9999 dias)
-
 ```python
-df_3040["flag_atraso_maior_9999"] = (df_3040["Atraso"] > 9999).astype(int)
+duplicados = df_test[df_test.duplicated('chave', keep=False)]['chave'].unique()
+
+if len(duplicados) > 0:
+    print("Valores duplicados na coluna 'key':", duplicados)
+else:
+    print("Não há valores duplicados na coluna 'key'.")
 ```
 
-📌 O que faz:
-- Cria uma flag (`flag_atraso_maior_9999`) que vale 1 quando o número de dias em atraso for maior que 9999.
-- Esse valor é irreal e indica erro ou problema de preenchimento.
-
-🧠 Ajuda a detectar registros que devem ser revisados ou desconsiderados.
+## 📘 O que este bloco faz:
+Este bloco imprime uma mensagem informando que a execução terminou com sucesso.
 
 
 ---
 
 
-# 🕒 Bloco 27 – Classifica o atraso por faixa
+# 📦 Bloco 22
 
-```python
-def classificar_atraso(atraso):
-    if pd.isna(atraso):
-        return "SEM DADO"
-    elif atraso <= 0:
-        return "SEM ATRASO"
-    elif atraso <= 30:
-        return "1 a 30"
-    elif atraso <= 90:
-        return "31 a 90"
-    elif atraso <= 9999:
-        return "91 a 9999"
-    else:
-        return "ACIMA DE 9999"
-
-df_3040["faixa_atraso"] = df_3040["Atraso"].apply(classificar_atraso)
+```bash
+# Bloco 22 - Código
 ```
 
-📌 O que faz:
-- Cria a coluna `faixa_atraso` com faixas categóricas para facilitar agrupamentos e visualizações.
+```python
+df_test.query('chave == "05597773_0003000247_2019-01-01_0215_901.0"')
+```
 
-🎯 Permite gráficos e análises como “quantos contratos estão em atraso acima de 90 dias”.
+## 📘 O que este bloco faz:
+Este bloco filtra a tabela para encontrar registros específicos, como contratos com determinado código ou atraso.
 
 
 ---
 
 
-# 🧼 Bloco 28 – Remove contratos com valor zerado
+# 📦 Bloco 23
 
-```python
-df_3040 = df_3040[df_3040["VlrContr"] > 0]
+```bash
+# Bloco 23 - Código
 ```
 
-📌 O que faz:
-- Remove da base todos os contratos cujo valor (`VlrContr`) seja igual ou menor que zero.
+```python
+df_test['Tp_gar_trat'] = df_test['Tp_gar_trat'].astype(str)
+#df_3040['tp_gar_trat'] = df_3040['tp_gar_trat'].astype(float)
+df_test['Cat']  = 'outro'
 
-🛑 Isso evita divisões por zero e garante que só contratos relevantes fiquem na base.
+####C1#######
+
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['426', '427', '671', '674', '1201']))), 'Cat'] = 'C1'
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['0426', '0427', '0671', '0674']))), 'Cat'] = 'C1'
+
+####C2#######
+
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['210', '21', '323', '324', '325', '423', '424', '499', '563', '902'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C2'
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['0210', '0323', '0324', '0325', '0423', '0424', '0499', '0563', '0902'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C2'
+
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['881','882','883','884','885','886','887','888','889','89', '890','899'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C2'
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['0881','0882','0883','0884','0885','0886','0887','0888','0889', '0890','0899'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C2'
+####C3#######
+
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['101', '102', '103', '104', '105', '106', '107', '108', '199', '201', '202', '203', '204', '205', '206', '207', '208', '209', '299'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C3'
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['0101', '0102', '0103', '0104', '0105', '0106', '0107', '0108', '0199', '0201', '0202', '0203', '0204', '0205', '0206', '0207', '0208', '0209', '0299'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C3'
+
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['322', '35', '350', '399', '423', '424', '428', '499', '901', '902', '903', '904', '562', '563', '564', '565'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C3'
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['0322', '0350', '0399', '0423', '0424', '0428', '0499', '0901', '0902', '0903', '0904', '0562', '0563', '0564', '0565'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C3'
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
 
 
 ---
 
 
-# ❗ Bloco 29 – Zera ou trata contratos com valor negativo
+# 📦 Bloco 24
 
-```python
-df_3040["VlrContr"] = df_3040["VlrContr"].apply(lambda x: x if x > 0 else np.nan)
+```bash
+# Bloco 24 - Código
 ```
 
-📌 O que faz:
-- Se `VlrContr` for negativo, transforma em `NaN` (vazio).
+```python
+df_test.Cat.value_counts()
+```
 
-🛠️ Isso permite manter o registro para análise, mas evita que valores incorretos afetem médias e somas.
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
 
 
 ---
 
 
-# 🔐 Bloco 30 – Cria coluna com saldo garantido
+# 📦 Bloco 25
+
+```bash
+# Bloco 25 - Código
+```
 
 ```python
-def calcular_saldo_garantido(row):
-    if isinstance(row["Val"], list):
-        return sum(row["Val"])
-    return 0
-
-df_3040["valor_garantias"] = df_3040.apply(calcular_saldo_garantido, axis=1)
+# Ordena o DataFrame original em ordem crescente por 'Coluna1' e decrescente por 'Coluna2'
+df_test.sort_values(by=['Cat'], ascending=[True], inplace=True)
 ```
 
-📌 O que faz:
-- Soma os valores das garantias vinculadas ao contrato (coluna `Val`).
-- Se a garantia estiver em lista, calcula a soma total.
-
-💡 Cria a coluna `valor_garantias` que mostra o total garantido por contrato.
-
-
-# 🧮 Bloco 31 – Índice de cobertura de garantias
-
-```python
-df_3040["indice_cobertura"] = df_3040["valor_garantias"] / df_3040["saldo_utilizado"]
-```
-
-📌 O que faz:
-- Cria a coluna `indice_cobertura`, que mostra quanto das garantias cobre o saldo do contrato.
-
-🧠 Fórmula:
-```
-indice_cobertura = valor total das garantias / saldo utilizado
-```
-
-💡 Se o valor for:
-- **>1** → Garantias cobrem mais do que o saldo.
-- **<1** → Garantias insuficientes.
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
 
 
 ---
 
 
-# ❗ Bloco 32 – Evita erro de divisão por zero
+# 📦 Bloco 26
 
-```python
-df_3040["indice_cobertura"] = df_3040["indice_cobertura"].replace([np.inf, -np.inf], np.nan)
+```bash
+# Bloco 26 - Código
 ```
 
-📌 O que faz:
-- Substitui valores infinitos (∞) do índice de cobertura por `NaN`.
-- Isso ocorre quando `saldo_utilizado = 0` → divisão por zero.
+```python
+df_test.tail()
+```
 
-🔒 Garante integridade dos dados para análises posteriores.
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
 
 
 ---
 
 
-# 🎯 Bloco 33 – Classifica nível de cobertura
+# 📦 Bloco 27
 
-```python
-def classificar_cobertura(valor):
-    if pd.isna(valor):
-        return "SEM DADO"
-    elif valor >= 1:
-        return "ACIMA DE 100%"
-    elif valor >= 0.5:
-        return "ENTRE 50% E 100%"
-    else:
-        return "ABAIXO DE 50%"
-
-df_3040["faixa_cobertura"] = df_3040["indice_cobertura"].apply(classificar_cobertura)
+```bash
+# Bloco 27 - Código
 ```
 
-📌 O que faz:
-- Cria a coluna `faixa_cobertura` com categorias baseadas no índice de cobertura.
+```python
+'C1' < 'OUTRO'
+```
 
-🧩 Permite filtrar e agrupar contratos por qualidade da garantia.
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
 
 
 ---
 
 
-# 🧼 Bloco 34 – Flag para contratos com valor nulo
+# 📦 Bloco 28
 
-```python
-df_3040["flag_valor_nulo"] = df_3040["VlrContr"].isna().astype(int)
+```bash
+# Bloco 28 - Código
 ```
 
-📌 O que faz:
-- Cria uma flag (0 ou 1) indicando se o valor do contrato está ausente (`NaN`).
+```python
+aggregations = {
+    'Tp': 'max',
+    'IniRelactCli': 'max',
+    'CaracEspecial': 'max',
+    'DiaAtraso': 'max',
+    'ClassOp': 'max',
+    'ProvConsttd': 'max',
+    'CongEcon': 'max',
+    'DtContr': 'max',
+    'VlrContr': 'sum',
+    'DtVencOp': 'max',
+    'DtContr': 'max',
+    'Tp_gar_trat': 'first',
+    'Ident': 'max',
+    'PercGar': 'max',
+    'VlrOrig': 'sum',
+    'v20': 'max',
+    'v40': 'max',
+    'v60': 'max',
+    'v80': 'max',
+    'v110': 'max',
+    'v120': 'max',
+    'v130': 'max',
+    'v140': 'max',
+    'v150': 'max',
+    'v160': 'max',
+    'v165': 'max',
+    'v170': 'max',
+    'v175': 'max',
+    'v180': 'max',
+    'v190': 'max',
+    'v199': 'max',
+    'v205': 'max',
+    'v210': 'max',
+    'v220': 'max',
+    'v230': 'max',
+    'v240': 'max',
+    'v245': 'max',
+    'v250': 'max',
+    'v255': 'max',
+    'v260': 'max',
+    'v270': 'max',
+    'v280': 'max',
+    'v290': 'max',
+    'v310': 'max',
+    'v320': 'max',
+    'v330': 'max'
+}
+```
 
-📊 Útil para identificar registros incompletos ou com erros de origem.
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
 
 
 ---
 
 
-# ✅ Bloco 35 – Mantém apenas contratos válidos
+# 📦 Bloco 29
 
-```python
-df_3040 = df_3040[df_3040["flag_valor_nulo"] == 0]
+```bash
+# Bloco 29 - Código
 ```
 
-📌 O que faz:
-- Remove da base todos os contratos com valor nulo (`NaN` em `VlrContr`).
-
-🎯 Isso deixa na base apenas os contratos que possuem valor registrado e podem ser analisados corretamente.
-
-
-# 🔧 Bloco 36 – Preenche valores vazios de categoria de garantia
-
 ```python
-df_3040["cat_garantia"] = df_3040["cat_garantia"].fillna("SEM GARANTIA")
+df_test = df_test.groupby(['Cd', 'Contrt', 'AnoMesReferencia', 'Mod']).agg(aggregations).reset_index()
 ```
 
-📌 O que faz:
-- Substitui valores vazios (`NaN`) da coluna `cat_garantia` por `"SEM GARANTIA"`.
-
-🔍 Isso facilita filtros e agrupamentos, evitando categorias em branco.
+## 📘 O que este bloco faz:
+Este bloco agrupa os dados por cliente e contrato, para fazer cálculos como soma de valores ou maior atraso.
 
 
 ---
 
 
-# 🛡️ Bloco 37 – Preenche valores vazios de faixa de cobertura
+# 📦 Bloco 30
 
-```python
-df_3040["faixa_cobertura"] = df_3040["faixa_cobertura"].fillna("SEM DADO")
+```bash
+# Bloco 30 - Código
 ```
 
-📌 O que faz:
-- Garante que todos os contratos tenham alguma classificação na coluna `faixa_cobertura`.
+```python
+df_test['chave'] = df_test['Cd'].astype(str) + "_" + df_test['Contrt'].astype(str) + "_" + df_test['AnoMesReferencia'].astype(str) + "_" + df_test['Mod'].astype(str)
+```
 
-📊 Isso permite criar gráficos e tabelas sem categorias ausentes.
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
 
 
 ---
 
 
-# 🆔 Bloco 38 – Cria coluna com identificador de cliente
+# 📦 Bloco 31
 
-```python
-df_3040["ident_cliente"] = df_3040["Cd"]
+```bash
+# Bloco 31 - Código
 ```
 
-📌 O que faz:
-- Copia a coluna `Cd` (código do cliente) para uma nova coluna `ident_cliente`.
+```python
+duplicados = df_test[df_test.duplicated('chave', keep=False)]['chave'].unique()
 
-🧠 Pode ser usado como chave de agrupamento por cliente.
+if len(duplicados) > 0:
+    print("Valores duplicados na coluna 'key':", duplicados)
+else:
+    print("Não há valores duplicados na coluna 'key'.")
+```
+
+## 📘 O que este bloco faz:
+Este bloco imprime uma mensagem informando que a execução terminou com sucesso.
 
 
 ---
 
 
-# 🔄 Bloco 39 – Preenche índice de utilização nulo
+# 📦 Bloco 32
 
-```python
-df_3040["IU"] = df_3040["IU"].fillna(0)
+```bash
+# Bloco 32 - Código
 ```
 
-📌 O que faz:
-- Preenche valores ausentes na coluna `IU` com 0.
+```python
+df_test.describe()
+```
 
-🔒 Isso evita problemas em operações matemáticas e filtros.
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
 
 
 ---
 
 
-# 💾 Bloco 40 – Exporta arquivo final
+# 📦 Bloco 33
 
-```python
-df_3040.to_parquet(output_folder + "contratos_agrupados.parquet", index=False)
+```bash
+# Bloco 33 - Código
 ```
 
-📌 O que faz:
-- Salva o DataFrame `df_3040` com todos os dados tratados e enriquecidos em um arquivo `.parquet`.
-
-📂 Local:
-- O arquivo será salvo na pasta `resultados/` com o nome `contratos_agrupados.parquet`.
-
-✅ Formato Parquet:
-- Compacto e eficiente para grandes volumes de dados.
-- Ideal para leitura rápida em Python, Spark, Power BI etc.
-
-
-# 🔧 Bloco 36 – Preenche valores vazios de categoria de garantia
-
 ```python
-df_3040["cat_garantia"] = df_3040["cat_garantia"].fillna("SEM GARANTIA")
+v_cols = [c for c in df_test.columns if 
+          (c.startswith('v1') or c.startswith('v2') or c.startswith('v3') 
+           or c.startswith('v4') or c.startswith('v5') or c.startswith('v6') 
+           or c.startswith('v7') or c.startswith('v8') or c.startswith('v9')
+           or c.startswith('v0'))]
+
+df_test[v_cols] = df_test[v_cols].fillna(0)
 ```
 
-📌 O que faz:
-- Substitui valores vazios (`NaN`) da coluna `cat_garantia` por `"SEM GARANTIA"`.
-
-🔍 Isso facilita filtros e agrupamentos, evitando categorias em branco.
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
 
 
 ---
 
 
-# 🛡️ Bloco 37 – Preenche valores vazios de faixa de cobertura
+# 📦 Bloco 34
 
-```python
-df_3040["faixa_cobertura"] = df_3040["faixa_cobertura"].fillna("SEM DADO")
+```bash
+# Bloco 34 - Código
 ```
 
-📌 O que faz:
-- Garante que todos os contratos tenham alguma classificação na coluna `faixa_cobertura`.
+```python
+view_list = [
+    df_test
+]
+```
 
-📊 Isso permite criar gráficos e tabelas sem categorias ausentes.
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
 
 
 ---
 
 
-# 🆔 Bloco 38 – Cria coluna com identificador de cliente
+# 📦 Bloco 36
 
-```python
-df_3040["ident_cliente"] = df_3040["Cd"]
+```bash
+# Bloco 36 - Código
 ```
 
-📌 O que faz:
-- Copia a coluna `Cd` (código do cliente) para uma nova coluna `ident_cliente`.
+```python
+# Saldo Total: Trata-se do somatório de v20, v40, v60, v80, v1XX e v2XX.
+for view in view_list:
+    view['saldo_total'] = (
+        (view['v20'] + 
+        view['v40'] +
+        view['v60'] + 
+        view['v80'] +
+        view['v110'] +
+        view['v120'] +
+        view['v130'] +
+        view['v140'] +
+        view['v150'] +
+        view['v160'] +
+        view['v165'] +
+        view['v170'] +
+        view['v175'] +
+        view['v180'] +
+        view['v190'] +
+        view['v199'] +
+        view['v205'] +
+        view['v210'] +
+        view['v220'] +
+        view['v230'] +
+        view['v240'] +
+        view['v245'] +
+        view['v250'] +
+        view['v255'] +
+        view['v260'] +
+        view['v270'] +
+        view['v280'] +
+        view['v290']).fillna(0)
+    )
+```
 
-🧠 Pode ser usado como chave de agrupamento por cliente.
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
 
 
 ---
 
 
-# 🔄 Bloco 39 – Preenche índice de utilização nulo
+# 📦 Bloco 38
 
-```python
-df_3040["IU"] = df_3040["IU"].fillna(0)
+```bash
+# Bloco 38 - Código
 ```
 
-📌 O que faz:
-- Preenche valores ausentes na coluna `IU` com 0.
+```python
+# Saldo Utilizado: Trata-se do somatório de v1XX e v2XX
+for view in view_list:
+    view['saldo_utilizado'] = (
+       (view['v110'] +
+        view['v120'] +
+        view['v130'] +
+        view['v140'] +
+        view['v150'] +
+        view['v160'] +
+        view['v165'] +
+        view['v170'] +
+        view['v175'] +
+        view['v180'] +
+        view['v190'] +
+        view['v199'] +
+        view['v205'] +
+        view['v210'] +
+        view['v220'] +
+        view['v230'] +
+        view['v240'] +
+        view['v245'] +
+        view['v250'] +
+        view['v255'] +
+        view['v260'] +
+        view['v270'] +
+        view['v280'] +
+        view['v290']).fillna(0)
+    )
+```
 
-🔒 Isso evita problemas em operações matemáticas e filtros.
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
 
 
 ---
 
 
-# 💾 Bloco 40 – Exporta arquivo final
+# 📦 Bloco 40
 
-```python
-df_3040.to_parquet(output_folder + "contratos_agrupados.parquet", index=False)
+```bash
+# Bloco 40 - Código
 ```
 
-📌 O que faz:
-- Salva o DataFrame `df_3040` com todos os dados tratados e enriquecidos em um arquivo `.parquet`.
+```python
+# Limite: Trata-se do somatório de v20, v40, v60 e v80
+for view in view_list:
+    view['limite'] = (
+       (view['v20'] +
+        view['v40'] +
+        view['v60'] +
+        view['v80']).fillna(0)
+    )
+```
 
-📂 Local:
-- O arquivo será salvo na pasta `resultados/` com o nome `contratos_agrupados.parquet`.
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
 
-✅ Formato Parquet:
-- Compacto e eficiente para grandes volumes de dados.
-- Ideal para leitura rápida em Python, Spark, Power BI etc.
+
+---
+
+
+# 📦 Bloco 42
+
+```bash
+# Bloco 42 - Código
+```
+
+```python
+# Índice de Utilização (IU): Trata-se da razão entre o saldo utilizado e a saldo total
+for view in view_list:
+    view['IU'] = (
+        (view['saldo_utilizado'] / view['saldo_total']).fillna(0).replace(np.inf, 1)
+    )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 43
+
+```bash
+# Bloco 43 - Código
+```
+
+```python
+df_test.head()
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 45
+
+```bash
+# Bloco 45 - Código
+```
+
+```python
+# Saldo Utilizado por Limite: Trata-se da razão entre o saldo utilizado e o limite
+for view in view_list:
+    view['saldo_utilizado/limite'] = (
+        (view['saldo_utilizado'] / view['limite']).fillna(0).replace(np.inf, 99)
+    )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 47
+
+```bash
+# Bloco 47 - Código
+```
+
+```python
+# Saldo de Atraso Total: Trata-se do somatório de v2XX
+for view in view_list:
+    view['saldo_atraso_total'] = (
+        (view['v205'] +
+        view['v210'] +
+        view['v220'] +
+        view['v230'] +
+        view['v240'] +
+        view['v245'] +
+        view['v250'] +
+        view['v255'] +
+        view['v260'] +
+        view['v270'] +
+        view['v280'] +
+        view['v290']).fillna(0)
+    )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 49
+
+```bash
+# Bloco 49 - Código
+```
+
+```python
+# Saldo de Atraso Total por Saldo Total: Trata-se da razão entre o saldo de atraso total e a saldo total
+for view in view_list:
+    view['saldo_atraso_total/saldo_total'] = (
+        (view['saldo_atraso_total'] / view['saldo_total']).fillna(0).replace(np.inf, 99)
+    )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 51
+
+```bash
+# Bloco 51 - Código
+```
+
+```python
+# Atraso > 30: Trata-se do somatório de v220, v230, v240, v245, v250, v255, v260, v270, v280 e v290
+for view in view_list:
+    view['DiaAtraso'] = view['DiaAtraso'].fillna(0)
+    if (view['DiaAtraso'] >= 0).any():
+        view['saldo_maior_30'] = view.apply(
+            lambda row: row['v220'] + 
+                        row['v230'] +
+                        row['v240'] +
+                        row['v245'] + 
+                        row['v250'] + 
+                        row['v255'] + 
+                        row['v260'] + 
+                        row['v270'] +
+                        row['v280'] + 
+                        row['v290'] if row['DiaAtraso'] >= 0 else 0, axis=1
+        )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 53
+
+```bash
+# Bloco 53 - Código
+```
+
+```python
+# Atraso > 90: Trata-se do somatório de v240, v245, v250, v255, v260, v270, v280 e v290
+for view in view_list:
+    view['DiaAtraso'] = view['DiaAtraso'].fillna(0)
+    if (view['DiaAtraso'] >= 0).any():
+        view['saldo_maior_90'] = view.apply(
+            lambda row: row['v240'] +
+                        row['v245'] + 
+                        row['v250'] + 
+                        row['v255'] + 
+                        row['v260'] + 
+                        row['v270'] +
+                        row['v280'] + 
+                        row['v290'] if row['DiaAtraso'] >= 0 else 0, axis=1
+        )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 55
+
+```bash
+# Bloco 55 - Código
+```
+
+```python
+# Atraso > 180: Trata-se do somatório de v255, v260, v270, v280 e v290
+for view in view_list:
+    view['DiaAtraso'] = view['DiaAtraso'].fillna(0)
+    if (view['DiaAtraso'] >= 0).any():
+        view['saldo_maior_180'] = view.apply(
+            lambda row: row['v255'] + 
+                        row['v260'] + 
+                        row['v270'] +
+                        row['v280'] + 
+                        row['v290'] if row['DiaAtraso'] >= 0 else 0, axis=1
+        )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 57
+
+```bash
+# Bloco 57 - Código
+```
+
+```python
+# Flag de Atraso: Trata-se de uma variável booleana que descreve a existência ou não de atraso, sendo 1 para True e 0 para False (É importante atentar-se que um atraso igual ou inferior a 5 não é considerado atraso)
+for view in view_list:
+    view['flag_atraso'] = (
+        (view['DiaAtraso'] > 5).astype(int)
+    )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 59
+
+```bash
+# Bloco 59 - Código
+```
+
+```python
+# Flag de Prejuízo: Trata-se de uma variável booleana que descreve a existência ou não de prejuízo, sendo 1 para True e 0 para False.
+for view in view_list:
+    view['flag_prejuizo'] = (
+        ((view['v310'] != 0) |
+        (view['v320'] != 0) |
+        (view['v330'] != 0)).astype(int)
+    )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 61
+
+```bash
+# Bloco 61 - Código
+```
+
+```python
+# Saldo de Prejuízo: Trata-se do somatório de v310, v320 e v330    
+for view in view_list:
+    view['saldo_prejuizo'] = (
+        (view['v310'] +
+        view['v320'] +
+        view['v330']).fillna(0)
+    )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 63
+
+```bash
+# Bloco 63 - Código
+```
+
+```python
+# Tempo de Relacionamento (anos): Trata-se do tempo, em anos, de relacionamento daquele determinado registro
+for view in view_list:
+    view['cliente_tempo_relac_anos'] = (
+        (view['AnoMesReferencia'] - view['IniRelactCli']).dt.days / 365
+    ).where((view['AnoMesReferencia'] - view['IniRelactCli']).dt.days / 365 >= 0, 0)
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 65
+
+```bash
+# Bloco 65 - Código
+```
+
+```python
+# Tempo de Relacionamento (meses): Trata-se do tempo, em meses, de relacionamento daquele determinado registro
+for view in view_list:
+    view['cliente_tempo_relac_meses'] = (
+        (view['AnoMesReferencia'] - view['IniRelactCli']).dt.days / 30
+    ).where((view['AnoMesReferencia'] - view['IniRelactCli']).dt.days / 30 >= 0, 0)
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 67
+
+```bash
+# Bloco 67 - Código
+```
+
+```python
+# lista com os códigos de mod's dos produtos rotativos
+mods_rotativos = ([
+    '0204',
+    '0210',
+    '0213',
+    '0214',
+    '0218',
+    '0303',
+    '0406',
+    '1304',
+    '1505',
+    '1901'
+])
+
+# Adicionar valores de mod iniciados por 19 à lista mods_rotativos
+mods_rotativos += [mod for mod in range(1900, 2000) if re.match('^19', str(mod))]
+
+# DtVencOp_v2: Trata-se da data de prazo de contrato para o caso da modalidade "parcelados", para o caso "rotativo" a data não existe 
+for view in view_list:
+    view['DtVencOp_v2'] = view.apply(lambda row: row['DtVencOp'] if row['Mod'] not in mods_rotativos else 0, axis=1)
+
+view['DtVencOp_v2'] = pd.to_datetime(view['DtVencOp_v2'])
+
+# Lista de dias a serem subtraídos para cada linha
+dias_subtrair = view['DtVencOp_v2'].dt.day
+
+# Loop para subtrair os dias individualmente em cada linha
+for index, dias in enumerate(dias_subtrair):
+    view.loc[index, 'DtVencOp_v2'] -= pd.Timedelta(days=dias-1)
+
+view['DtVencOp_v2'] = view['DtVencOp_v2'].replace(pd.to_datetime('1970-01-01'), pd.NaT)
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 69
+
+```bash
+# Bloco 69 - Código
+```
+
+```python
+# Prazo de Contrato em Dias: Trata-se da quantidade de dias do prazo de contrato daquele determinado registro
+view['DtContr'] = pd.to_datetime(view['DtContr'])
+
+# Lista de dias a serem subtraídos para cada linha
+dias_subtrair = view['DtContr'].dt.day
+
+# Loop para subtrair os dias individualmente em cada linha
+for index, dias in enumerate(dias_subtrair):
+    view.loc[index, 'DtContr'] -= pd.Timedelta(days=dias-1)
+
+view['DtContr'] = view['DtContr'].replace(pd.to_datetime('1970-01-01'), pd.NaT)
+
+for view in view_list:
+    view['prazo_contrato'] = (view['DtVencOp'] - view['DtContr']).dt.days
+    view['prazo_contrato'] = view['prazo_contrato'].apply(lambda x: 0 if x < 0 or x is None else x)
+    view['prazo_contrato'] = view['prazo_contrato'].fillna(0)
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 71
+
+```bash
+# Bloco 71 - Código
+```
+
+```python
+# Prazo Remanescente em Dias: Trata-se da quantidade de dias remanescente do prazo de contrato daquele determinado registro
+for view in view_list:
+    view['prazo_remanescente'] = (view['DtVencOp'] - view['AnoMesReferencia']).dt.days
+    view['prazo_remanescente'] = view['prazo_remanescente'].apply(lambda x: 0 if x < 0 or x is None else x)
+    view['prazo_remanescente'] = view['prazo_remanescente'].fillna(0)
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 73
+
+```bash
+# Bloco 73 - Código
+```
+
+```python
+# Percentual de Prazo Remanescente: Trata-se do percentual de prazo remanescente daquele determinado registro
+for view in view_list:
+    view['percentual_prazo_remanescente'] = (
+        (view['prazo_remanescente'] / view['prazo_contrato']) * 100
+    )
+    view['percentual_prazo_remanescente'] = view['percentual_prazo_remanescente'].fillna(0)
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 75
+
+```bash
+# Bloco 75 - Código
+```
+
+```python
+# Tempo Conta Corrente em Dias: Trata-se da quantidade de dias em que esse determinado cliente possui sua conta corrente aberta
+for view in view_list:
+    view['tempo_conta_corrente_dias'] = (
+        (view['AnoMesReferencia'] - view['IniRelactCli']).dt.days
+    ).fillna(0).where((view['AnoMesReferencia'] - view['IniRelactCli']).dt.days >= 0, 0)
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 77
+
+```bash
+# Bloco 77 - Código
+```
+
+```python
+# # Saldo em Cheque Especial: Trata-se do saldo em cheque especial daquele determinado cliente
+for view in view_list:
+    view['saldo_cheque_especial'] = np.where(view['Mod'] == '0213', view['saldo_total'], 0)
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 79
+
+```bash
+# Bloco 79 - Código
+```
+
+```python
+# Flag de Adiantamento a Depositante: Trata-se de uma variável booleana que descreve a existência ou não de adiantamento a depositante, sendo 1 para True e 0 para False
+for view in view_list:
+    view['flag_adiantamento_depositante'] = (
+        (view['Mod'] == "0101").astype(int)
+    )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 81
+
+```bash
+# Bloco 81 - Código
+```
+
+```python
+# Flag de Atraso: Trata-se de uma variável booleana que descreve a existência ou não de vencidos de 5 a 361 dias, sendo 1 para True e 0 para False
+# É importante atentar-se que um atraso igual ou inferior a 5 não é considerado atraso
+for view in view_list:
+    view['flag_atraso_1_361'] = (
+        (view['DiaAtraso'] > 5) & (view['DiaAtraso'] < 361)
+    ).astype(int)
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 83
+
+```bash
+# Bloco 83 - Código
+```
+
+```python
+# Flag de Saldo em Cheque Especial: Trata-se de uma variável booleana que descreve a existência ou não de saldo em cheque especial, sendo 1 para True e 0 para False
+for view in view_list:
+    view['flag_cheque_especial'] = (
+        (view['Mod'] == "0213").astype(int)
+    )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 85
+
+```bash
+# Bloco 85 - Código
+```
+
+```python
+# Percentual de Contrato Pago: Trata-se do percentual de contrato pago daquele determinado registro
+for view in view_list:
+    denominador_zero = view['VlrContr'] == 0
+    percentual_contrato_pago = 1 - (view['saldo_total'] / view['VlrContr'])
+    view['percentual_contrato_pago'] = np.where(
+        np.logical_and(~denominador_zero, percentual_contrato_pago >= 0),
+        percentual_contrato_pago,
+        0
+    )
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 87
+
+```bash
+# Bloco 87 - Código
+```
+
+```python
+# Flag de Atraso maior do que 30: Trata-se de uma variável booleana que descreve a existência ou não de atraso maior do que 30 dias para o determinado registro, sendo 1 para True e 0 para False
+for view in view_list:
+    view['flag_atraso_maior30'] = (
+        (view['DiaAtraso'] > 30).astype(int)
+    )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 89
+
+```bash
+# Bloco 89 - Código
+```
+
+```python
+# Flag de Atraso maior do que 90: Trata-se de uma variável booleana que descreve a existência ou não de atraso maior do que 90 dias para o determinado registro, sendo 1 para True e 0 para False
+for view in view_list:
+    view['flag_atraso_maior90'] = (
+        (view['DiaAtraso'] > 90).astype(int)
+    )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 91
+
+```bash
+# Bloco 91 - Código
+```
+
+```python
+# Flag de Atraso maior do que 180: Trata-se de uma variável booleana que descreve a existência ou não de atraso maior do que 180 dias para o determinado registro, sendo 1 para True e 0 para False
+for view in view_list:
+    view['flag_atraso_maior180'] = (
+        (view['DiaAtraso'] > 180).astype(int)
+    )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 93
+
+```bash
+# Bloco 93 - Código
+```
+
+```python
+mods_rotativos = ([
+    '0204',
+    '0210',
+    '0213',
+    '0214',
+    '0218',
+    '0303',
+    '0406',
+    '1304',
+    '1505',
+])
+
+# Adicionar valores de mod iniciados por 19 à lista mods_rotativos
+mods_rotativos += [mod for mod in range(1900, 2000) if re.match('^19', str(mod))]
+
+# Flag de Produtos Rotativos: Trata-se de uma variável booleana que descreve se aquele determinado registro é ou não um produto rotativo, sendo 1 para True e 0 para False
+for view in view_list:
+    view['flag_prod_rotativos'] = (
+        view['Mod'].isin(mods_rotativos).astype(int)
+    )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 94
+
+```bash
+# Bloco 94 - Código
+```
+
+```python
+# Flag de Garantia: Trata-se de uma variável booleana que descreve a existência ou não de garantia, sendo 1 para True e 0 para False
+for view in view_list:
+    view['flag_garantia'] = (
+        (view['Tp_gar_trat'].notnull() & 
+        (view['Tp_gar_trat'] != 0)).astype(int)
+    )
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 95
+
+```bash
+# Bloco 95 - Código
+```
+
+```python
+df_test.info()
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 96
+
+```bash
+# Bloco 96 - Código
+```
+
+```python
+df_test.IU.value_counts()
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 97
+
+```bash
+# Bloco 97 - Código
+```
+
+```python
+
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 98
+
+```bash
+# Bloco 98 - Código
+```
+
+```python
+# pasta em que a base processada será alocada
+output_folder = r'C:\Users\GalinoBeatriz(BipGro\OneDrive - BUSINESS INTEGRATION PARTNERS SPA\General - CREDISIS - PROJETO R4966\PE352 & PD Concessao\03. Bases\01. Book de variáveis\3040\0001'
+
+# exportação da base processadaem parquet
+df_test.to_parquet(f'{output_folder}\\novo_novo_01-base_contrato_variaveis.parquet', index=False)
+```
+
+## 📘 O que este bloco faz:
+Este bloco salva a tabela final em um arquivo, que pode ser usado em outros sistemas ou relatórios (como Excel ou Power BI).
+
+
+---
+
+
+# 📦 Bloco 99
+
+```bash
+# Bloco 99 - Código
+```
+
+```python
+df_test.sample(10)
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 100
+
+```bash
+# Bloco 100 - Código
+```
+
+```python
+df_test.describe()
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 101
+
+```bash
+# Bloco 101 - Código
+```
+
+```python
+df_test.query('cliente_tempo_relac_anos < 0')
+```
+
+## 📘 O que este bloco faz:
+Este bloco filtra a tabela para encontrar registros específicos, como contratos com determinado código ou atraso.
+
+
+---
+
+
+# 📦 Bloco 103
+
+```bash
+# Bloco 103 - Código
+```
+
+```python
+df_test['Tp_gar_trat'] = df_test['Tp_gar_trat'].astype(str)
+#df_3040['tp_gar_trat'] = df_3040['tp_gar_trat'].astype(float)
+df_test['Cat']  = 'outro'
+
+####C1#######
+
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['426', '427', '671', '674', '1201']))), 'Cat'] = 'C1'
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['0426', '0427', '0671', '0674']))), 'Cat'] = 'C1'
+
+####C2#######
+
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['210', '21', '323', '324', '325', '423', '424', '499', '563', '902'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C2'
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['0210', '0323', '0324', '0325', '0423', '0424', '0499', '0563', '0902'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C2'
+
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['881','882','883','884','885','886','887','888','889','89', '890','899'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C2'
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['0881','0882','0883','0884','0885','0886','0887','0888','0889', '0890','0899'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C2'
+####C3#######
+
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['101', '102', '103', '104', '105', '106', '107', '108', '199', '201', '202', '203', '204', '205', '206', '207', '208', '209', '299'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C3'
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['0101', '0102', '0103', '0104', '0105', '0106', '0107', '0108', '0199', '0201', '0202', '0203', '0204', '0205', '0206', '0207', '0208', '0209', '0299'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C3'
+
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['322', '35', '350', '399', '423', '424', '428', '499', '901', '902', '903', '904', '562', '563', '564', '565'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C3'
+df_test.loc[(df_test['Tp_gar_trat'].apply(lambda x: any(item in x for item in ['0322', '0350', '0399', '0423', '0424', '0428', '0499', '0901', '0902', '0903', '0904', '0562', '0563', '0564', '0565'])) & (df_3040['Cat'] == 'outro')), 'Cat'] = 'C3'
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 104
+
+```bash
+# Bloco 104 - Código
+```
+
+```python
+# Ordena o DataFrame original em ordem crescente 
+df_test.sort_values(by=['Cat'], ascending=[True], inplace=True)
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 105
+
+```bash
+# Bloco 105 - Código
+```
+
+```python
+# dicionário com as variáveis que serão agregadas e seus repectivos métodos estatísticos
+aggregations = {
+    'IniRelactCli': 'max',
+    'CaracEspecial': 'max',
+    'DiaAtraso': 'max',
+    'ClassOp': 'max',
+    'ProvConsttd': 'max',
+    'CongEcon': 'max',
+    'DtContr': 'max',
+    'VlrContr': 'sum',
+    'DtVencOp': 'max',
+    'DtContr': 'max',
+    'Tp_gar_trat': 'first',
+    'Ident': 'max',
+    'PercGar': 'max',
+    'VlrOrig': 'sum',
+    'v20': 'max',
+    'v40': 'max',
+    'v60': 'max',
+    'v80': 'max',
+    'v110': 'max',
+    'v120': 'max',
+    'v130': 'max',
+    'v140': 'max',
+    'v150': 'max',
+    'v160': 'max',
+    'v165': 'max',
+    'v170': 'max',
+    'v175': 'max',
+    'v180': 'max',
+    'v190': 'max',
+    'v199': 'max',
+    'v205': 'max',
+    'v210': 'max',
+    'v220': 'max',
+    'v230': 'max',
+    'v240': 'max',
+    'v245': 'max',
+    'v250': 'max',
+    'v255': 'max',
+    'v260': 'max',
+    'v270': 'max',
+    'v280': 'max',
+    'v290': 'max',
+    'v310': 'max',
+    'v320': 'max',
+    'v330': 'max',
+    'flag_garantia': 'max',   
+    'saldo_total': 'sum',
+    'saldo_utilizado': 'sum',
+    'limite': 'sum',
+    'IU': 'first',
+    # 'saldo_utilizado/limite': 'first',
+    'saldo_atraso_total': 'sum',
+#    'saldo_atraso_total/saldo_total': 'first',
+    'saldo_maior_30': 'sum',
+    'saldo_maior_90': 'sum',
+    'saldo_maior_180': 'sum',
+    'flag_atraso': 'max',
+    'flag_prejuizo': 'max',
+    'saldo_prejuizo': 'sum',
+    'cliente_tempo_relac_anos': 'max',
+    'cliente_tempo_relac_meses': 'max',
+    'prazo_contrato': 'max', 
+    'prazo_remanescente': 'max', 
+    # 'percentual_prazo_remanescente': 'max', 
+    'tempo_conta_corrente_dias': 'max', 
+    'flag_atraso_1_361': 'max', 
+    # 'percentual_contrato_pago': 'max',
+    'flag_atraso_maior30': 'max', 
+    'flag_atraso_maior90': 'max', 
+    'flag_atraso_maior180': 'max'
+}
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 106
+
+```bash
+# Bloco 106 - Código
+```
+
+```python
+# Consolidação da visão (df) de clientes
+df_cliente = df_test.groupby(['Cd', 'AnoMesReferencia']).agg(aggregations).reset_index()
+```
+
+## 📘 O que este bloco faz:
+Este bloco agrupa os dados por cliente e contrato, para fazer cálculos como soma de valores ou maior atraso.
+
+
+---
+
+
+# 📦 Bloco 107
+
+```bash
+# Bloco 107 - Código
+```
+
+```python
+df_cliente.head()
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 109
+
+```bash
+# Bloco 109 - Código
+```
+
+```python
+# Saldo Utilizado por Limite: Trata-se da razão entre o saldo utilizado e o limite
+df_cliente['saldo_utilizado/limite'] = (
+    (df_cliente['saldo_utilizado'] / df_cliente['limite']).fillna(0).replace(np.inf, 99)
+)
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 110
+
+```bash
+# Bloco 110 - Código
+```
+
+```python
+# Saldo de Atraso Total por Saldo Total: Trata-se da razão entre o saldo de atraso total e a saldo total
+df_cliente['saldo_atraso_total/saldo_total'] = (
+    (df_cliente['saldo_atraso_total'] / df_cliente['saldo_total']).fillna(0).replace(np.inf, 99)
+)
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 111
+
+```bash
+# Bloco 111 - Código
+```
+
+```python
+denominador_zero = df_cliente['VlrContr'] == 0
+percentual_contrato_pago = 1 - (df_cliente['saldo_total'] / df_cliente['VlrContr'])
+df_cliente['percentual_contrato_pago'] = np.where(
+    np.logical_and(~denominador_zero, percentual_contrato_pago >= 0),
+    percentual_contrato_pago,
+    0
+)
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 112
+
+```bash
+# Bloco 112 - Código
+```
+
+```python
+df_cliente['percentual_prazo_remanescente'] = (
+    (df_cliente['prazo_remanescente'] / df_cliente['prazo_contrato']) * 100
+)
+df_cliente['percentual_prazo_remanescente'] = df_cliente['percentual_prazo_remanescente'].fillna(0)
+```
+
+## 📘 O que este bloco faz:
+Este bloco ajusta os tipos dos dados (ex: número, data) e substitui valores ausentes por zeros ou vazios, deixando a tabela pronta para cálculos.
+
+
+---
+
+
+# 📦 Bloco 113
+
+```bash
+# Bloco 113 - Código
+```
+
+```python
+df_cliente.columns
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 114
+
+```bash
+# Bloco 114 - Código
+```
+
+```python
+# pasta em que a base processada será alocada
+output_folder = r'C:\Users\GalinoBeatriz(BipGro\OneDrive - BUSINESS INTEGRATION PARTNERS SPA\General - CREDISIS - PROJETO R4966\PE352 & PD Concessao\03. Bases\01. Book de variáveis\3040\0001'
+
+# exportação da base processadaem parquet
+df_cliente.to_parquet(f'{output_folder}\\novo_novo_01-base_cliente_variaveis.parquet', index=False)
+```
+
+## 📘 O que este bloco faz:
+Este bloco salva a tabela final em um arquivo, que pode ser usado em outros sistemas ou relatórios (como Excel ou Power BI).
+
+
+---
+
+
+# 📦 Bloco 115
+
+```bash
+# Bloco 115 - Código
+```
+
+```python
+df_cliente.IU.value_counts()
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 116
+
+```bash
+# Bloco 116 - Código
+```
+
+```python
+df_cliente.info()
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 117
+
+```bash
+# Bloco 117 - Código
+```
+
+```python
+
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
+
+
+---
+
+
+# 📦 Bloco 118
+
+```bash
+# Bloco 118 - Código
+```
+
+```python
+
+```
+
+## 📘 O que este bloco faz:
+Este bloco realiza etapas intermediárias de cálculo, transformação ou limpeza dos dados para preparar as tabelas finais.
